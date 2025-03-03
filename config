@@ -63,7 +63,8 @@ kubectl get services -n kafka
 3-Deploying a Kafka Broker
 The last step is to deploy a Kafka broker. We create a 02-kafka.yaml file with the following contents, be we replace <ZOOKEEPER-INTERNAL-IP> with the CLUSTER-IP from the previous step for Zookeeper. The broker will fail to deploy if this step is not taken.
 
-```apiVersion: v1
+```
+apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -116,7 +117,7 @@ The Kafka Broker pod might take a minute to move from ContainerCreating status t
 
 Notice the line in 02-kafka.yaml where we provide a value for KAFKA_ADVERTISED_LISTENERS. To ensure that Zookeeper and Kafka can communicate by using this hostname (kafka-broker), we need to add the following entry to the /etc/hosts file on our local machine:
 
-
+/etc/hosts
 ```
 127.0.0.1   kafka-broker
 ```
