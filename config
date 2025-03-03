@@ -122,6 +122,26 @@ Notice the line in 02-kafka.yaml where we provide a value for KAFKA_ADVERTISED_L
 127.0.0.1   kafka-broker
 ```
 
+Testing Kafka Topics
+In order to test that we can send and retrieve messages from a topic in Kafka, we will need to expose a port for Kafka to make it accessible from localhost. We run the following command to expose a port:
+ kubectl port-forward kafka-broker-5c55f544d4-hrgnv 9092 -n kafka
+Forwarding from 127.0.0.1:9092 -> 9092
+Forwarding from [::1]:9092 -> 9092
+
+$ echo "hello world!" | kafkacat -P -b localhost:9092 -t test
+
+
+
+$ kafkacat -C -b localhost:9092 -t test
+
+hello world!
+% Reached end of topic test [0] at offset 1
+
+
+-----------------
+kafka ui
+
+docker run -d -p 9000:9000     --add-host kafka-broker:10.102.199.42     -e KAFKA_BROKERCONNECT=10.102.199.42:9092     obsidiandynamics/kafdrop
 
 
 
