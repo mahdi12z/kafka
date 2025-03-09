@@ -30,8 +30,8 @@ kubectl apply -f 00-namespace.yaml
 Kafka requires Zookeeper for managing broker metadata. We deploy a single Zookeeper instance.
 
 Create a deployment file (01-zookeeper.yaml):
-yaml
-Copy
+
+```sh
 apiVersion: v1
 kind: Service
 metadata:
@@ -72,22 +72,22 @@ spec:
           name: zookeeper
           ports:
             - containerPort: 2181
+```
 Apply the deployment:
-sh
-Copy
+```sh
 kubectl apply -f 01-zookeeper.yaml
+```
 Verify Zookeeper service:
-sh
-Copy
+```sh
 kubectl get services -n kafka
+```
 # 3. Deploying a Kafka Broker
 Now, deploy the Kafka broker and connect it to Zookeeper.
 
 Create a deployment file (02-kafka.yaml):
 Replace <ZOOKEEPER-INTERNAL-IP> with the ClusterIP of the Zookeeper service obtained in the previous step.
 
-yaml
-Copy
+```sh
 apiVersion: v1
 kind: Service
 metadata:
@@ -134,56 +134,58 @@ spec:
           name: kafka-broker
           ports:
             - containerPort: 9092
+```
 Apply the deployment:
-sh
-Copy
+```sh
 kubectl apply -f 02-kafka.yaml
+```
 Kafka Broker may take a minute to start. Check its status with:
 
-sh
-Copy
+```sh
 kubectl get pods -n kafka
+```
 # 4. Configuring Hostname for Kafka
 To ensure Zookeeper and Kafka can communicate properly, add the following entry to your local /etc/hosts file:
 
-Copy
+```sh
 127.0.0.1   kafka-broker
+```
 # 5. Testing Kafka Topics
 To verify that Kafka is working correctly, follow these steps:
 
 Expose Kafka Broker Port:
-sh
-Copy
+```sh
 kubectl port-forward kafka-broker-<POD_ID> 9092 -n kafka
+```
 Replace <POD_ID> with the actual Kafka broker pod ID (found using kubectl get pods -n kafka).
 
 Produce a test message:
-sh
-Copy
+```sh
 echo "hello world!" | kafkacat -P -b localhost:9092 -t test
+```
 Consume the test message:
-sh
-Copy
+```sh
 kafkacat -C -b localhost:9092 -t test
+```
 If everything is set up correctly, the output will be:
 
-shell
-Copy
 hello world!
 % Reached end of topic test [0] at offset 1
 # 6. Kafka UI (Kafdrop)
 To monitor and manage Kafka topics visually, deploy Kafdrop using Docker.
 
 Run Kafdrop using Docker:
-sh
-Copy
+```sh
 docker run -d -p 9000:9000 \
     --add-host kafka-broker:<KAFKA-INTERNAL-IP> \
     -e KAFKA_BROKERCONNECT=<KAFKA-INTERNAL-IP>:9092 \
     obsidiandynamics/kafdrop
+```
 Replace <KAFKA-INTERNAL-IP> with the ClusterIP of the Kafka broker.
 
 Access Kafka UI:
 Open a browser and navigate to:
+```sh
  http://localhost:9000
+```
 Here, you can view topics, partitions, and messages.
