@@ -20,9 +20,11 @@ metadata:
   name: "kafka"
   labels:
     name: "kafka"
-...
+```
 
+```sh
 kubectl apply -f 00-namespace.yaml
+```
 
 # 2. Deploying Zookeeper
 Kafka requires Zookeeper for managing broker metadata. We deploy a single Zookeeper instance.
