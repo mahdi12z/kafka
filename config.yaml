@@ -1,20 +1,20 @@
 Defining a Kafka Namespace
 1-First, we define a namespace for deploying all Kafka resources, using a file named 00-namespace.yaml:
 
-``
+```yaml
 apiVersion: v1
 kind: Namespace
 metadata:
   name: "kafka"
   labels:
     name: "kafka"
-``
+```
 
 We apply this file using kubectl apply -f 00-namespace.yaml.
 
 2-Deploying Zookeeper
 Next, we deploy Zookeeper to our k8s namespace. We create a file name 01-zookeeper.yaml with the following contents:
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -63,7 +63,7 @@ kubectl get services -n kafka
 3-Deploying a Kafka Broker
 The last step is to deploy a Kafka broker. We create a 02-kafka.yaml file with the following contents, be we replace <ZOOKEEPER-INTERNAL-IP> with the CLUSTER-IP from the previous step for Zookeeper. The broker will fail to deploy if this step is not taken.
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
